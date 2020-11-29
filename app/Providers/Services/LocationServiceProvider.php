@@ -1,10 +1,11 @@
 <?php
 
-namespace DummyNamespace;
+namespace App\Providers\Services;
 
+use App\Services\LocationService;
 use Illuminate\Support\ServiceProvider;
 
-class DummyClass extends ServiceProvider
+class LocationServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -13,7 +14,9 @@ class DummyClass extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('locationservice', function () {
+            return new LocationService();
+        });
     }
 
     /**
@@ -23,6 +26,5 @@ class DummyClass extends ServiceProvider
      */
     public function boot()
     {
-        //
     }
 }

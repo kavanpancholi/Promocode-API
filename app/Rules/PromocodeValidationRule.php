@@ -1,10 +1,11 @@
 <?php
 
-namespace {{ namespace }};
+namespace App\Rules;
 
+use App\Models\Promocode;
 use Illuminate\Contracts\Validation\Rule;
 
-class {{ class }} implements Rule
+class PromocodeValidationRule implements Rule
 {
     /**
      * Create a new rule instance.
@@ -19,13 +20,19 @@ class {{ class }} implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed $value
      * @return bool
      */
     public function passes($attribute, $value)
     {
-        //
+        $promoCode = Promocode::where([
+            ['code', '=', $value],
+            ['is_active', '=', true],
+            ['start_at', '<', now()],
+            ['end_at', '>', now()],
+        ])->first();
+        return !!$promoCode;
     }
 
     /**
@@ -35,6 +42,6 @@ class {{ class }} implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'The promocode is not valid.';
     }
 }

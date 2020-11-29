@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Event;
+use App\Models\Promocode;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class {{ class }} extends Migration
+class CreateEventsPromocodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +15,10 @@ class {{ class }} extends Migration
      */
     public function up()
     {
-        Schema::create('{{ table }}', function (Blueprint $table) {
+        Schema::create('events_promocodes', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignIdFor(Event::class);
+            $table->foreignIdFor(Promocode::class);
         });
     }
 
@@ -26,6 +29,6 @@ class {{ class }} extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('{{ table }}');
+        Schema::dropIfExists('events_promocodes');
     }
 }

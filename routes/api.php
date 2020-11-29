@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\PromocodeController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('promocodes', PromocodeController::class);
+Route::get('test', function() {
+    return 'hello';
+});
+Route::resource('events', EventController::class);
+Route::post('test12', [PromocodeController::class, 'apply']);
+//Route::resource('promocodes', PromocodeController::class);
