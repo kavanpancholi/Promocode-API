@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\PromocodeController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('test', function() {
-    return 'hello';
-});
-Route::resource('events', EventController::class);
-Route::post('test12', [PromocodeController::class, 'apply']);
-//Route::resource('promocodes', PromocodeController::class);
+Route::get('promocodes/active', [PromocodeController::class, 'active']);
+Route::put('promocodes/{promocode}/activate', [PromocodeController::class, 'activate']);
+Route::put('promocodes/{promocode}/deactivate', [PromocodeController::class, 'deactivate']);
+Route::post('promocodes/apply', [PromocodeController::class, 'apply']);
+Route::resource('promocodes', PromocodeController::class);

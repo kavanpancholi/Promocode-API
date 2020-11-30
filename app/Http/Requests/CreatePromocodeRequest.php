@@ -27,10 +27,11 @@ class CreatePromocodeRequest extends FormRequest
             'title' => 'required|string',
             'code' => 'required|string|unique:promocodes,code',
             'description' => 'string',
-            'discount_type' => 'required|in:amount,percentage',
             'radius' => 'required|numeric|min:1',
+            'radius_unit' => 'required|in:km,mile',
             'start_at' => 'required|date',
             'end_at' => 'required|date',
+            'is_active' => 'boolean',
         ];
     }
 }

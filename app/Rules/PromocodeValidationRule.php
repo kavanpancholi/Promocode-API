@@ -27,7 +27,7 @@ class PromocodeValidationRule implements Rule
     public function passes($attribute, $value)
     {
         $promoCode = Promocode::where([
-            ['code', '=', $value],
+            ['code', '=', strtoupper($value)],
             ['is_active', '=', true],
             ['start_at', '<', now()],
             ['end_at', '>', now()],

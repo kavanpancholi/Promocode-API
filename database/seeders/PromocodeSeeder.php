@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Event;
 use App\Models\Promocode;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +14,7 @@ class PromocodeSeeder extends Seeder
      */
     public function run()
     {
-        $promocodeFor5km = Promocode::create([
+        Promocode::create([
             'title' => '5km Radius free',
             'code' => 'FREE5KM',
             'radius' => 5,
@@ -25,7 +24,7 @@ class PromocodeSeeder extends Seeder
             'end_at' => now()->addMonth(),
         ]);
 
-        $promocodeFor10km = Promocode::create([
+        Promocode::create([
             'title' => '10km Radius free',
             'code' => 'FREE10KM',
             'radius' => 10,
@@ -34,11 +33,5 @@ class PromocodeSeeder extends Seeder
             'start_at' => now(),
             'end_at' => now()->addMonth(),
         ]);
-
-        $events = Event::get();
-        $events->each(function ($event) use ($promocodeFor5km, $promocodeFor10km) {
-            $promocodeFor5km->events()->attach($event);
-            $promocodeFor10km->events()->attach($event);
-        });
     }
 }

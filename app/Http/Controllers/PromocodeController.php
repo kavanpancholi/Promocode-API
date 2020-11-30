@@ -58,7 +58,7 @@ class PromocodeController extends Controller
     {
         try {
             $promocode = new Promocode();
-            $promocode->fill($request);
+            $promocode->fill($request->all());
             $promocode->save();
 
             return [
@@ -79,19 +79,21 @@ class PromocodeController extends Controller
         }
     }
 
+    /**
+     * @param ApplyPromocodeRequest $request
+     * @return array|\Illuminate\Http\JsonResponse
+     */
     public function apply(ApplyPromocodeRequest $request)
     {
         $promoCode = Promocode::where('code', $request->get('code'))->where('is_active', true)->first();
         if ($promoCode) {
-            $distance = LocationService::setOriginLatLong([
+            if ($promoCode->isDistanceInRange([
                 'latitude' => $request->get('origin_latitude'),
                 'longitude' => $request->get('origin_longitude')
-            ])->setDestinationLatLong([
+            ], [
                 'latitude' => $request->get('destination_latitude'),
                 'longitude' => $request->get('destination_longitude')
-            ])->setUnit($promoCode->radius_unit)->getDistance();
-
-            if ($distance <= $promoCode->radius) {
+            ])) {
                 try {
                     $directions = \GoogleMaps::load('directions')
                         ->setParam([
@@ -108,24 +110,28 @@ class PromocodeController extends Controller
                         'message' => 'Promocode applied successfully',
                     ];
                 } catch (\Exception $exception) {
-                    return [
+                    return response()->json([
                         'status' => 'error',
                         'message' => 'Error while fetching polylines. Please check Google Map Configurations',
-                    ];
+                    ], 500);
                 }
             }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sorry. Your destination is not in the range.',
+            ], 400);
         }
     }
 
     /**
      * @param UpdatePromocodeRequest $request
      * @param Promocode $promocode
-     * @return array|string[]
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function update(UpdatePromocodeRequest $request, Promocode $promocode)
     {
         try {
-            $promocode->fill($request->validated());
+            $promocode->fill($request->all());
             $promocode->save();
 
             return [
@@ -139,23 +145,23 @@ class PromocodeController extends Controller
                 'message' => $exception->getMessage(),
                 'request' => $request->all(),
             ]);
-            return [
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Promocode could not be updated. Please try again later',
-            ];
+            ], 500);
         }
     }
 
     /**
      * @param Promocode $promocode
-     * @return string[]
+     * @return \Illuminate\Http\JsonResponse|string[]
      */
     public function activate(Promocode $promocode)
     {
         try {
             if ($promocode->is_active) {
                 return [
-                    'status' => 'error',
+                    'status' => 'success',
                     'message' => 'Promocode has already been activated',
                 ];
             }
@@ -172,23 +178,23 @@ class PromocodeController extends Controller
                 'message' => $exception->getMessage(),
                 'request' => $promocode,
             ]);
-            return [
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Promocode could not be activated. Please try again later',
-            ];
+            ], 500);
         }
     }
 
     /**
      * @param Promocode $promocode
-     * @return string[]
+     * @return \Illuminate\Http\JsonResponse|string[]
      */
     public function deactivate(Promocode $promocode)
     {
         try {
             if (!$promocode->is_active) {
                 return [
-                    'status' => 'error',
+                    'status' => 'success',
                     'message' => 'Promocode has already been deactivated',
                 ];
             }
@@ -205,16 +211,16 @@ class PromocodeController extends Controller
                 'message' => $exception->getMessage(),
                 'request' => $promocode,
             ]);
-            return [
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Promocode could not be deactivated. Please try again later',
-            ];
+            ], 500);
         }
     }
 
     /**
      * @param Promocode $promocode
-     * @return string[]
+     * @return \Illuminate\Http\JsonResponse|string[]
      */
     public function destroy(Promocode $promocode)
     {
@@ -231,10 +237,10 @@ class PromocodeController extends Controller
                 'message' => $exception->getMessage(),
                 'request' => $promocode,
             ]);
-            return [
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Promocode could not be removed. Please try again later',
-            ];
+            ], 500);
         }
     }
 }
