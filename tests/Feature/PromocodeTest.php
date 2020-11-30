@@ -29,20 +29,40 @@ class PromocodeTest extends TestCase
         $response->assertJsonStructure([
             'status',
             'data' => [
-                [
-                    'id',
-                    'title',
-                    'code',
-                    'description',
-                    'radius',
-                    'radius_unit',
-                    'start_at',
-                    'end_at',
-                    'is_active',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ]
+                'current_page',
+                'data' => [
+                    [
+                        'id',
+                        'title',
+                        'code',
+                        'description',
+                        'radius',
+                        'radius_unit',
+                        'start_at',
+                        'end_at',
+                        'is_active',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                    ]
+                ],
+                'first_page_url',
+                'from',
+                'last_page',
+                'last_page_url',
+                'links' => [
+                    [
+                        'url',
+                        'label',
+                        'active',
+                    ]
+                ],
+                'next_page_url',
+                'path',
+                'per_page',
+                'prev_page_url',
+                'to',
+                'total',
             ]
         ]);
     }
@@ -60,20 +80,40 @@ class PromocodeTest extends TestCase
         $response->assertJsonStructure([
             'status',
             'data' => [
-                [
-                    'id',
-                    'title',
-                    'code',
-                    'description',
-                    'radius',
-                    'radius_unit',
-                    'start_at',
-                    'end_at',
-                    'is_active',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ]
+                'current_page',
+                'data' => [
+                    [
+                        'id',
+                        'title',
+                        'code',
+                        'description',
+                        'radius',
+                        'radius_unit',
+                        'start_at',
+                        'end_at',
+                        'is_active',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                    ]
+                ],
+                'first_page_url',
+                'from',
+                'last_page',
+                'last_page_url',
+                'links' => [
+                    [
+                        'url',
+                        'label',
+                        'active',
+                    ]
+                ],
+                'next_page_url',
+                'path',
+                'per_page',
+                'prev_page_url',
+                'to',
+                'total',
             ]
         ]);
     }
@@ -274,7 +314,7 @@ class PromocodeTest extends TestCase
                     'updated_at',
                     'deleted_at',
                 ],
-                'route' => [
+                'routes' => [
                     [
                         'bounds',
                         'copyrights',
