@@ -1,0 +1,77 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx:alpine
+    command: nginx -g "daemon off;"
+    links:
+      - laravel
+    ports:
+      - "8080:80"
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./scripts/nginx/:/etc/nginx/conf.d/
+    networks:
+      - hostnet
+
+  laravel:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    depends_on:
+      - mysql
+      - redis
+    working_dir: /var/www/
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./:/var/www/
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: kavan
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      REDIS_HOST: redis
+      CACHE_DRIVER: redis
+    networks:
+      - hostnet
+
+  mysql:
+    image: mysql:5.7.22
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: kavan
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./scripts/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - hostnet
+
+  redis:
+    image: redis:5-alpine
+    ports:
+      - "6382:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - hostnet
+
+#Network
+networks:
+  hostnet:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+  redis:
+    driver: local
