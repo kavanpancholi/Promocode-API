@@ -25,7 +25,7 @@ class UpdatePromocodeRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'code' => 'required','string','unique:promocodes,code,'.$this->promocode->id,
+            'code' => ['required','string','unique:promocodes,code,'.$this->promocode->id],
             'description' => 'string',
             'radius' => 'required|numeric|min:1',
             'radius_unit' => 'required|in:km,mile',

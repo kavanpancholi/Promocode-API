@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ResponseCacheMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -40,8 +41,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:api',
+            'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            ResponseCacheMiddleware::class
         ],
     ];
 
