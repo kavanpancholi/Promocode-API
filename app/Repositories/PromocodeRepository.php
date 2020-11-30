@@ -7,6 +7,8 @@ namespace App\Repositories;
 use App\Exceptions\GoogleMapDirectionAPIException;
 use App\Exceptions\PromocodeOutOfRangeException;
 use App\Models\Promocode;
+use App\Http\Resources\Promocode as PromocodeResource;
+
 
 class PromocodeRepository extends BaseRepository
 {
@@ -45,7 +47,7 @@ class PromocodeRepository extends BaseRepository
         $route = $this->getRoute($originLatLong, $destinationLatLong);
         return [
             'routes' => $route['routes'],
-            'promocode' => $promoCode,
+            'promocode' => new PromocodeResource($promoCode),
         ];
     }
 

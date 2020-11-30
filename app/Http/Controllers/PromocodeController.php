@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\GoogleMapDirectionAPIException;
+use App\Exceptions\PromocodeOutOfRangeException;
 use App\Http\Requests\ApplyPromocodeRequest;
 use App\Http\Requests\CreatePromocodeRequest;
 use App\Http\Requests\UpdatePromocodeRequest;
+use App\Http\Resources\PromocodeCollection;
+use App\Http\Resources\Promocode as PromocodeResource;
 use App\Models\Promocode;
 use App\Repositories\PromocodeRepository;
+use Illuminate\Http\JsonResponse;
 
 class PromocodeController extends Controller
 {
@@ -18,29 +23,29 @@ class PromocodeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \ReflectionException
      */
     public function index()
     {
         $promoCodes = $this->promocodeRepository->all();
 
-        return response()->json(['status' => 'success', 'data' => $promoCodes]);
+        return response()->json(['status' => 'success', 'data' => new PromocodeCollection($promoCodes)]);
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function active()
     {
         $promoCodes = $this->promocodeRepository->active();
 
-        return response()->json(['status' => 'success', 'data' => $promoCodes]);
+        return response()->json(['status' => 'success', 'data' => new PromocodeCollection($promoCodes)]);
     }
 
     /**
      * @param CreatePromocodeRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(CreatePromocodeRequest $request)
     {
@@ -49,14 +54,15 @@ class PromocodeController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Promocode has been created successfully',
-            'data' => $promocode
+            'data' => new PromocodeResource($promocode)
         ]);
     }
 
     /**
      * @param ApplyPromocodeRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\PromocodeOutOfRangeException
+     * @return JsonResponse
+     * @throws GoogleMapDirectionAPIException
+     * @throws PromocodeOutOfRangeException
      */
     public function apply(ApplyPromocodeRequest $request)
     {
@@ -72,7 +78,7 @@ class PromocodeController extends Controller
     /**
      * @param UpdatePromocodeRequest $request
      * @param Promocode $promocode
-     * @return array|\Illuminate\Http\JsonResponse
+     * @return array|JsonResponse
      */
     public function update(UpdatePromocodeRequest $request, Promocode $promocode)
     {
@@ -81,13 +87,13 @@ class PromocodeController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Promocode has been updated successfully',
-            'data' => $promocode
+            'data' => new PromocodeResource($promocode)
         ]);
     }
 
     /**
      * @param Promocode $promocode
-     * @return \Illuminate\Http\JsonResponse|string[]
+     * @return JsonResponse|string[]
      */
     public function activate(Promocode $promocode)
     {
@@ -101,7 +107,7 @@ class PromocodeController extends Controller
 
     /**
      * @param Promocode $promocode
-     * @return \Illuminate\Http\JsonResponse|string[]
+     * @return JsonResponse|string[]
      */
     public function deactivate(Promocode $promocode)
     {
@@ -115,7 +121,7 @@ class PromocodeController extends Controller
 
     /**
      * @param Promocode $promocode
-     * @return \Illuminate\Http\JsonResponse|string[]
+     * @return JsonResponse|string[]
      */
     public function destroy(Promocode $promocode)
     {
