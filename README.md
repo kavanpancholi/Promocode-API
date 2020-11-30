@@ -85,6 +85,8 @@ Open [http://localhost:8080](http://localhost:8080)
 
 Open [http://localhost:8080/docs](http://localhost:8080/docs)
 
+![Docs Overview](public/img/docs-overview.png)
+
 ## Contact 
 * Find me on Github at [@kavanpancholi](https://github.com/kavanpancholi)
 * Email <kavanpancholi@gmail.com>
